@@ -158,7 +158,7 @@
 // //console.log(flatArray.join(' '));
 
 
-// 11.	Equal Neighbors
+// 11.	Equal Neighbors. // => Not completed TODO 
 
 function equalNeighbors(matrix) {
 
