@@ -1,6 +1,3 @@
-// /* eslint-disable no-plusplus */
-// /* eslint-disable indent */
-// /* eslint-disable eqeqeq */
 // // LAB
 
 // // new [forof] loop
