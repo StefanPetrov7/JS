@@ -228,7 +228,7 @@ function solve6(input) {
 
 
 //===========================================================================================================
-// ====> 6.	Store Catalogue
+// ====> 6.	Store Catalogue.  ====>>>>>>> TODO not completed
 
 
 function solve6(input) {
