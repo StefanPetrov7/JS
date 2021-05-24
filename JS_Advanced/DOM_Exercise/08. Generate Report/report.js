@@ -13,10 +13,11 @@ function generateReport() {
     })
 
     let jsonOutput = [];
-    let jsonObj = {};
 
     for (const row of table) {
 
+        let jsonObj = {};
+        
         for (const i in props) {
 
             jsonObj[props[i]] = row.children[cols[i]].textContent;
