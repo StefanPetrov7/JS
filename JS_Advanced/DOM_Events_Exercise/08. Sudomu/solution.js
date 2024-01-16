@@ -1,76 +1,78 @@
-// JUDGE 15 pts ????
-
 function solve() {
-
-    const tbody = Array.from(document.querySelectorAll('tbody'));
     const [check, clear] = document.querySelectorAll('button');
-    const output = document.getElementById('check');
-    const table = document.querySelector('table');
+    let displayField = document.querySelector('#check>p');
+    const table = document.querySelector('tbody');
+    const tableBoarders = document.querySelector('table');
+    document.querySelector('tfoot').addEventListener('click', onClick);
 
-    check.addEventListener('click', (ev) => {
+    function onClick(ev) {
+        let target = ev.target;
 
-        let isSame = false;
+        if (target.innerText == 'Quick Check') {
+            const sudomu = getSudomu();
+            let isSudomuCorrect = false;
 
-        for (const row of tbody) {
+            isSudomuCorrect = isSumCorrect(sudomu) && (isNumbersRepeat(sudomu) == false);
+            let textResult = isSudomuCorrect ? 'You solve it! Congratulations!' : 'NOP! You are not done yet...';
+            tableBoarders.style.border = isSudomuCorrect ? '2px solid green' : '2px solid red';
+            displayField.style.color = isSudomuCorrect ? 'green' : 'red';
+            displayField.textContent = textResult;
+        }
 
-            let isDifferent = false;
-            const rowOne = Array.from(row.children[0].querySelectorAll('input'));
-            const rowTwo = Array.from(row.children[1].querySelectorAll('input'));
-            const rowThree = Array.from(row.children[2].querySelectorAll('input'));
-            const matrix = [rowOne, rowTwo, rowThree];
+        if (target.innerText == 'Clear') {
+            tableBoarders.style.border = 'none';
+            displayField.textContent = '';
 
-            for (let i = 0; i < matrix.length; i++) {
-
-                let first = Number(matrix[i][0].value)
-                let second = Number(matrix[i][1].value)
-                let third = Number(matrix[i][2].value)
-
-                if (first != second && first != third && second != third) {
-                    isDifferent = true;
-                    continue;
-                } else {
-                    isDifferent = false;
-                    break;
-                }
-            }
-
-            for (let i = 0; i < matrix.length; i++) {
-                for (let j = 0; j < matrix.length; j++) {
-
-                    if (Number(matrix[i][j].value) !== 1 && Number(matrix[i][j].value) !== 2 && Number(matrix[i][j].value) !== 3) {
-                        isDifferent = false;
-                        break;
-                    }
-                }
-            }
-
-            if (isDifferent) {
-                table.style.border = "2px solid green";
-                output.style.color = "green";
-                output.textContent = 'You solve it! Congratulations!';
-            } else {
-                table.style.border = "2px solid red";
-                output.style.color = "red";
-                output.textContent = 'NOP! You are not done yet...';
+            let cells = table.getElementsByTagName('td');
+            for (let i = 0; i < cells.length; i++) {
+                cells[i].innerHTML = '';
             }
         }
-    })
+    }
 
-    clear.addEventListener('click', (ev) => {
-        for (const row of tbody) {
+    function isSumCorrect(sudomu) {
 
-            const rowOne = Array.from(row.children[0].querySelectorAll('input'));
-            const rowTwo = Array.from(row.children[1].querySelectorAll('input'));
-            const rowThree = Array.from(row.children[2].querySelectorAll('input'));
-            const matrix = [rowOne, rowTwo, rowThree];
+        return sudomu
+            .map(row => row
+                .reduce((acc, curEl) => acc + curEl))
+            .every((element, r, arr) => element === arr[0])
+            && sudomu
+                .reduce((acc, curEl) => acc
+                    .map((element, r) => element + curEl[r]))
+                .every((element, r, arr) => element === arr[0]);
+    }
 
-            for (let i = 0; i < matrix.length; i++) {
-                for (let j = 0; j < matrix.length; j++) {
-                    matrix[i][j].value = ''
-                }
+    function isNumbersRepeat(sudomu) {
+
+        let isRepeat = true;
+
+        isRepeat = sudomu
+            .map((row) => row
+                .some((num, i) => row.indexOf(num) !== i))
+            .some((val) => val === true);
+
+        isRepeat = sudomu[0]
+            .map((_, i) => sudomu.map(row => row[i]))
+            .map((col) => col
+                .some((num, i) => col.indexOf(num) !== i))
+            .some((val) => val === true);
+
+        return isRepeat;
+    }
+
+    function getSudomu() {
+        let sudomu = [];
+
+        for (let r = 0, row; row = table.rows[r]; r++) {
+            let colsArr = [];
+
+            for (let c = 0, col; col = row.cells[c]; c++) {
+                let number = Number(col.querySelector('input').value);
+                colsArr.push(number);
             }
+            sudomu.push(colsArr);
         }
-        table.style.border = "none";
-        output.textContent = '';
-    })
+
+        return sudomu;
+    }
 }
